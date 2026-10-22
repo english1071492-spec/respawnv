@@ -1,0 +1,21 @@
+name: Build plugin
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - run: unzip -o LobbyNPC.zip -d extracted
+      - run: mvn -B package -f "$(find extracted -name pom.xml | head -1)"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: LobbyNPC-jar
+          path: extracted/**/target/LobbyNPC-1.0.jar
